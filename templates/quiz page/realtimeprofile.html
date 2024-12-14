@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Result</title>
+</head>
+<body>
+    <h1>Quiz Result for {{ student.name }}</h1>
+    <p>Subject: {{ subject }}</p>
+    <p>Score: {{ score }} / {{ total_questions }}</p>
+
+    <h2>Responses:</h2>
+    <ol>
+        {% for mcq in responses %}
+        <li>
+            <p><strong>Question:</strong> {{ mcq.question }}</p>
+            <p><strong>Your Answer:</strong> {{ mcq.userAns }}</p>
+            <p><strong>Correct Answer:</strong> {{ mcq.answer }}</p>
+        </li>
+        {% endfor %}
+    </ol>
+</body>
+</html>

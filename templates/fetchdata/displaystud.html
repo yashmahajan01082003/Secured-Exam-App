@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixed Side Navbar with Black Theme</title>
+  <!-- Bootstrap CSS link -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* CSS for the side navbar */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #333; /* Dark grey background */
+    }
+
+    .sidebar {
+      height: 90%;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #000;
+      padding-top: 20px;
+      margin: 20px; /* Add margin to the right side of the navbar */
+      border-radius: 10px; /* Increase border radius */
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 16px;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      background-color: #111;
+    }
+
+    /* CSS for the form */
+    .form-container {
+      margin-left: 280px; /* Adjust this value to make the form align properly with the sidebar */
+      margin-top: 50px;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border-radius: 10px; /* Add border radius to the form container */
+    }
+
+    .form-container label {
+      font-weight: bold;
+      display: block;
+    }
+
+    .form-container input[type="text"] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-container input[type="text"]:focus {
+      border: 2px solid #007bff;
+    }
+
+    .form-container input[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .form-container input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    /* CSS for the cards */
+    .card {
+      background-color: #000; /* Black background for the cards */
+      color: #fff; /* White text */
+      border-radius: 10px; /* Add border radius to the cards */
+      margin-bottom: 20px; /* Margin below each card */
+    }
+
+    /* Center the links and text in the cards */
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Smaller size of text */
+    .card-title {
+      font-size: 16px;
+    }
+
+    .btn {
+      margin-top: 10px;
+    }
+
+    /* Style links inside cards */
+    .card a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .card a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Fixed side navbar -->
+  <div class="sidebar">
+        <a href="{%url 'in'%}">Dashboard</a>
+    <a href="#">Id: {{Student.student_id}}</a>
+    <a href="#">Name : {{Student.name}}</a>
+    <a href="#">Branch : {{Student.branch}}</a>
+    <a href="#">College : {{Student.college}}</a>
+  </div>
+
+  <!-- Container for Subjects -->
+<section style="margin-left:250px">
+  <div class="container mt-4">
+    <h3 class="text-center mb-4 text-light">Total Alloted Exams</h3> <!-- Add heading to the container -->
+    <div class="row">
+      {% for sub in AllSubjects %}
+      <div class="col-lg-3 mb-4"> <!-- Use col-lg-3 for 4 columns on large screens -->
+        <div class="card" style="height:140px">
+          <div class="card-body">
+            <h5 class="card-title">{{sub.subject}}</h5>
+            <!-- Add other fields from the ExamRecord model as needed -->
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+  <!-- Container for Subjects -->
+  <section style="margin-left:250px">
+    <div class="container mt-4">
+      <h3 class="text-center mb-4 text-light">Total Attempted Exams</h3> <!-- Add heading to the container -->
+      <div class="row">
+        {% for sub in ASubs %}
+        <div class="col-md-3 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{sub}}</h5>
+              <a class="btn btn-success" href="{% url 'examRecs' roll=Student.student_id sub=sub%}">View Images</a>
+              <a class="btn btn-success" href="{% url 'examScore' roll=Student.student_id sub=sub%}">View Score</a>
+              <!-- Add other fields from the ExamRecord model as needed -->
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bootstrap JS scripts (optional, if you need JavaScript functionality) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

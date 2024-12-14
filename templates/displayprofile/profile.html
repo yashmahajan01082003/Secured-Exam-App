@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+  <style>
+    body {
+      background-color: #3F4346;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      color: white; /* Set text color to white */
+    }
+     .card-title {
+    position: relative;
+    padding-bottom : 10px;
+  }
+
+  .card-title::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+  }
+
+    #sidebar {
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      background-color: black; /* Set background color to black */
+      color: #fff;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 1;
+      border-radius: 25px;
+      margin: 10px;
+    }
+
+    #sidebar ul.components {
+      padding: 20px 0;
+      border-bottom: 1px solid #d1d8e0;
+    }
+
+    #sidebar ul p {
+      padding: 10px;
+      font-size: 1.1em;
+      display: block;
+    }
+
+    #sidebar ul li a {
+      padding: 10px;
+      font-size: 0.9em;
+      display: block;
+    }
+
+    #sidebar ul li a:hover {
+      color: #343a40;
+      background-color: #fff;
+    }
+
+    #sidebar .profile {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #sidebar .profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      padding-top: 20px;
+      color: #343a40;
+      margin-left: 250px;
+    }
+
+    /* Card container */
+    .card {
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      background-color: #181818; /* Set background color to black */
+      color: white; /* Set text color to white */
+      padding: 20px;
+      margin :10px;
+      box-sizing: border-box;
+      border-radius: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Card content */
+    .card-content {
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .cardrow{
+      margin : 20px 5px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      #sidebar {
+        display: none; /* Hide the sidebar on smaller screens */
+      }
+
+      .container {
+        margin-left: 0; /* Reset the left margin of the container */
+      }
+    }
+
+    h1,
+    p {
+      color: #fff; /* Set text color to white */
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#sidebarCollapse').on('click', function() {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  </script>
+</head>
+
+<body>
+
+  <div id="sidebar" >
+  <ul class="list-unstyled components">
+    <li class="profile text-center">
+      <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="profile-img rounded-circle" alt="Profile">
+            <h5 class="text-white mt-3" name="nameofstud">{{Student.student_id}}</h5>
+      <h6 class="text-white mt-3">{{Student.name}}</h6>
+    </li>
+  </ul>
+  <ul class="list-unstyled components">
+    <li>
+      <a href="#" class="text-white">{{Student.college}} ({{College.college_id}} )</a>
+    </li>
+    <li>
+      <a href="#" class="text-white">{{Student.branch}}</a>
+    </li>
+    <li>
+      <a href="#" class="text-white">{{Contact.email}}</a>
+    </li>
+
+    <li>
+      <a href="#" class="text-white">{{Contact.phone_number}}</a>
+    </li>
+  </ul>
+
+      <li>
+      <a href="{% url 'execFaceMesh'%}" class="btn btn-primary" style="margin:10px">Check Visibility</a>
+    </li>
+
+    <li>
+      <a href="#" class="text-white">Suggested Dist : 50cm</a>
+    </li>
+    <li>
+      <a href="{% url 'execFaceDistance'%}" class="btn btn-primary" style="margin:10px">Check Distance</a>
+    </li>
+      <li>
+      <a href="{% url 'execBr'%}" class="btn btn-primary" style="margin:10px">Adjust Brigtness</a>
+    </li>
+
+      <li>
+      <a href="{% url 'execVol'%}" class="btn btn-primary" style="margin:10px">Adjust Volume</a>
+    </li>
+</div>
+
+
+  <div class="container">
+    <div class="row cardrow">
+
+      {% for sub,Buffer in Paired %}
+
+
+        <div class="col-md-4">
+          <div class="card">
+            {{index}}
+            <div class="card-content">
+              <h4 class="card-title">Course : {{sub.subject}}</h4>
+
+              <div class="card-text">
+                <p>Date : {{sub.date}}</p>
+                <p>Start Time : {{sub.start_time}}</p>
+                <p>End Time : {{sub.end_time}}</p>
+                <p><span id="timer-{{ forloop.counter }}"></span></p>
+                {% if Buffer == 1 %}
+
+                <a href="#" class="btn btn-primary">Yet To Start</a>
+                {% endif %}
+                {% if Buffer == 0 %}
+                <script>
+                  // Get the element with the id "timer"
+                        var timerElement = document.getElementById("timer-{{ forloop.counter }}");
+
+                        // Set the display property to "none"
+                        timerElement.style.display = "none";
+                </script>
+                <a href="{% url 'execQuiz' qName=sub.subject student_id=Student.student_id qNo=0 flag=1 %}" class="btn btn-success">Start Exam</a>
+                {% endif %}
+                {% if Buffer == -1 %}
+                 <script>
+                  // Get the element with the id "timer"
+                        var timerElement = document.getElementById("timer-{{ forloop.counter }}");
+
+                        // Set the display property to "none"
+                        timerElement.style.display = "none";
+                </script>
+                <a href="#" class="btn btn-success">Completed</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if forloop.counter|divisibleby:3 %}
+          </div>
+          <div class="row cardrow">
+        {% endif %}
+      {% endfor %}
+    </div>
+<!-- Your HTML and CSS code here -->
+
+<script type="text/javascript">
+  // Define a function to calculate and update the time difference
+  function updateTimeDifference() {
+    {% for sub in Subjects %}
+      // JavaScript program to calculate the time difference between two dates
+
+      // To set two dates to two variables
+      var currentDate = new Date();
+      var date1 = new Date(currentDate);
+      var date2 = new Date("{{ sub.date }}");
+
+      // Extract hour and minute values from start time string
+      var startTime = "{{ sub.start_time }}";
+
+    if (startTime=='noon')
+    {
+        startTime = '12 pm';
+    }
+
+      // Extract hour and minute values from start time string
+      var timeComponents = startTime.split(" ");
+      var hour = parseInt(timeComponents[0]);
+      var period = timeComponents[1];
+
+      // Adjust hour for "p.m." period
+      if (period.toLowerCase() === "p.m." && hour !== 12) {
+        hour += 12;
+      }
+
+      // Set the hour and minute components of date 2
+      date2.setHours(hour);
+      date2.setMinutes(0);
+
+      // To calculate the time difference of two dates in milliseconds
+      var Difference_In_Time = date2.getTime() - date1.getTime();
+
+      // Calculate hours, minutes, and seconds
+      var hours = Math.floor(Difference_In_Time / (1000 * 60 * 60));
+      var minutes = Math.floor((Difference_In_Time % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((Difference_In_Time % (1000 * 60)) / 1000);
+
+      // Calculate the difference in dates
+      var Difference_In_Dates = Math.floor(Difference_In_Time / (1000 * 60 * 60 * 24));
+
+      // Construct the time output with the difference in dates
+      var timeOutput = hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
+
+      if (Difference_In_Dates > 0) {
+        timeOutput += " (" + Difference_In_Dates + " day(s))";
+      }
+
+      // Update the timer element for this iteration
+      var timerElement = document.getElementById("timer-{{ forloop.counter }}");
+      timerElement.textContent = timeOutput;
+    {% endfor %}
+  }
+
+  // Call updateTimeDifference every second
+  setInterval(updateTimeDifference, 1000);
+</script>
+  </div>
+</body>
+
+</html>

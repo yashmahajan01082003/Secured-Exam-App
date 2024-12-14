@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+        /* Customize the modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 400px;
+            height: 200px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin: auto;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #3F4346;
+        }
+
+        .container {
+            background-color: #181818;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Montserrat', sans-serif;
+            max-width: 900px; /* Updated value */
+            margin: 50px auto; /* Added margin for centering */
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container > p {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .question {
+            width: 75%;
+        }
+
+        .options {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        #options label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        #warningButton{
+            display : none;
+        }
+
+        .options input {
+            opacity: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #555555;
+            border: 1px solid #dddddd;
+            border-radius: 50%;
+        }
+
+        .options input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .options .checkmark:after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            display: block;
+            background: #21bf73;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: 300ms ease-in-out 0s;
+        }
+
+        .options input[type="radio"]:checked ~ .checkmark {
+            background: #21bf73;
+            border: 1px solid #21bf73;
+            transition: 300ms ease-in-out 0s;
+        }
+
+        .options input[type="radio"]:checked ~ .checkmark:after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .btn-primary {
+            background-color: red;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: red;
+            border: none;
+        }
+
+        .btn-success {
+            padding: 5px 25px;
+            background-color: #007BFF;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-success:hover {
+            background-color: #007BFF;
+        }
+
+        @media (max-width: 576px) {
+            .question {
+                width: 100%;
+                word-spacing: 2px;
+            }
+        }
+            .checkmark-link .fas {
+            display: none;
+            }
+
+            .checkmark-link.selected .fas {
+            display: inline-block;
+            }
+
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #555555;
+        }
+
+        .progress-bar {
+            border-radius: 10px;
+            background-color: #21bf73;
+        }
+
+        .student-details {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .student-details span {
+            font-weight: 600;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-sm-5 my-1">
+
+    <div class="student-details">
+        <div><span>Student Name:</span> {{Stud.name}}</div>
+        <div><span>Enrollment Number : </span> {{Stud.student_id}}</div>
+        <div><span>Subject : </span> {{subject}}</div>
+    </div>
+    <h1 class="text-center">Quiz</h1>
+<div class="question ml-sm-5 pl-sm-5 pt-2">
+    <div class="py-2 h5"><b>{{qNo}}. {{MCQ.question}}</b></div>
+    <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
+        <div class="py-2 h5">
+            {% if resp == '1' %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=1 %}" class="btn btn-success ">{{MCQ.choice1}}</a>
+            {% else %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=1 %}" class="btn btn-light ">{{MCQ.choice1}}</a>
+            {% endif %}
+        </div>
+        <div class="py-2 h5">
+            {% if resp == '2' %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=2 %}" class="btn btn-success ">{{MCQ.choice2}}</a>
+            {% else %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=2 %}" class="btn btn-light ">{{MCQ.choice2}}</a>
+            {% endif %}
+        </div>
+        <div class="py-2 h5">
+            {% if resp == '3' %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=3 %}" class="btn btn-success ">{{MCQ.choice3}}</a>
+            {% else %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=3 %}" class="btn btn-light ">{{MCQ.choice3}}</a>
+            {% endif %}
+        </div>
+        <div class="py-2 h5">
+            {% if resp == '4' %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=4 %}" class="btn btn-success heckmark-link">{{MCQ.choice4}}</a>
+            {% else %}
+                <a href="{% url 'storeRes' qName=subject student_id=Stud.student_id qNo=qNo question=MCQ.question resp=4 %}" class="btn btn-light heckmark-link">{{MCQ.choice4}}</a>
+            {% endif %}
+        </div>
+</div>
+</div>
+
+    <div class="d-flex align-items-center pt-3">
+        <div id="prev">
+            <a  href="{% url 'execQuiz' qName=subject student_id=Stud.student_id qNo=qNo flag=2%}" class="btn btn-primary">Previous</a>
+        </div>
+        <div class="ml-auto mr-sm-5">
+            {% if fsubmit == 1 %}
+            <a  href="{% url 'examScore' roll=Stud.student_id sub=subject %}" class="btn btn-info ">Final Submit</a>
+
+            {% else %}
+            <a  href="{% url 'execQuiz' qName=subject student_id=Stud.student_id qNo=qNo flag=1%}" class="btn btn-info ">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="progress mt-3">
+        <div class="progress-bar" role="progressbar" style="width: {{progesspercent}}%;" aria-valuenow="{{qNo}}" aria-valuemin="0" aria-valuemax="{{mcql}}"></div>
+    </div>
+
+<center><p><span id="timer" style="font-size:18px;"></span></p></center>
+</div>
+
+
+
+<script type="text/javascript">
+  // Define a function to calculate and update the time difference
+  function updateTimeDifference() {
+      // JavaScript program to calculate the time difference between two dates
+
+      // To set two dates to two variables
+      var currentDate = new Date();
+      var date1 = new Date(currentDate);
+      var date2 = new Date("{{ date }}");
+
+      // Extract hour and minute values from start time string
+      var startTime = "{{ endTime }}";
+
+    if (startTime=='noon')
+    {
+        startTime = '12 pm';
+    }
+
+      // Extract hour and minute values from start time string
+      var timeComponents = startTime.split(" ");
+      var hour = parseInt(timeComponents[0]);
+      var period = timeComponents[1];
+
+    // Adjust hour for "p.m." period
+      if (period.toLowerCase() === "p.m." && hour !== 12) {
+        hour += 12;
+      }
+
+      // Set the hour and minute components of date 2
+      date2.setHours(hour);
+      date2.setMinutes(0);
+      console.log(startTime + '' + date2)
+
+      // To calculate the time difference of two dates in milliseconds
+      var Difference_In_Time = date2.getTime() - date1.getTime();
+
+      // Calculate hours, minutes, and seconds
+      var hours = Math.floor(Difference_In_Time / (1000 * 60 * 60));
+      var minutes = Math.floor((Difference_In_Time % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((Difference_In_Time % (1000 * 60)) / 1000);
+
+      // Calculate the difference in dates
+      var Difference_In_Dates = Math.floor(Difference_In_Time / (1000 * 60 * 60 * 24));
+
+      // Construct the time output with the difference in dates
+      var timeOutput = hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
+
+      if (Difference_In_Dates > 0) {
+        timeOutput += " (" + Difference_In_Dates + " day(s))";
+      }
+
+      // Update the timer element for this iteration
+      var timerElement = document.getElementById("timer");
+      timerElement.textContent = timeOutput;
+
+  }
+
+  // Call updateTimeDifference every second
+  setInterval(updateTimeDifference, 1000);
+</script>
+
+
+
+<!-- Modal element -->
+<div id="warningModal" class="modal">
+    <div class="modal-content">
+        <h2>Warning!</h2>
+        <p>Your screen is split or you switched tabs/windows.</p>
+        <button id="nextButton" class="btn btn-danger">Next</button>
+    </div>
+</div>
+
+<script>
+    // Display warning modal when screen is split or tab/window is changed
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    function handleResize() {
+        if (window.innerWidth < screen.width || window.innerHeight < screen.height) {
+            displayWarningModal();
+        }
+    }
+
+    function handleVisibilityChange() {
+        if (document.visibilityState === 'hidden') {
+            displayWarningModal();
+        }
+    }
+
+    function displayWarningModal() {
+        var warningButton = document.getElementById('warningButton');
+        var modal = document.getElementById('warningModal');
+        modal.style.display = 'block';
+
+        // Add event listener to the next button
+        var nextButton = document.getElementById('nextButton');
+        nextButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+
+            // Trigger the execution of the href of the warningButton
+            warningButton.click();
+        });
+    }
+
+
+</script>
+
+
+
+    <a id="warningButton" href="{% url 'execWarn' qName=subject student_id=Stud.student_id qNo=qNo %}" />
+</body>
+</html>
